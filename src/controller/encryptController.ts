@@ -51,15 +51,18 @@ export async function encryptSession(
     });
   }
 
-  bcrypt.hash(session + secureTokenEnv, saltRounds, function (err, hash) {
-    if (err) return res.status(500).json(err);
-
+  try {
+    // FIX: Using await to ensure hash is complete before sending response
+    const hash = await bcrypt.hash(session + secureTokenEnv, saltRounds);
     const hashFormat = hash.replace(/\//g, '_').replace(/\+/g, '-');
+
     return res.status(201).json({
       status: 'success',
       session: session,
       token: hashFormat,
       full: `${session}:${hashFormat}`,
     });
-  });
+  } catch (err) {
+    return res.status(500).json(err);
+  }
 }
