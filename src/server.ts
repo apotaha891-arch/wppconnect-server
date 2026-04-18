@@ -9,7 +9,7 @@ dotenv.config();
 const serverConfig = {
   ...config,
   ...(process.env.SECRET_KEY && { secretKey: process.env.SECRET_KEY }),
-  ...(process.env.PORT && { port: process.env.PORT }),
+  ...(process.env.PORT && { port: parseInt(process.env.PORT, 10) }),
   ...(process.env.WPP_WEBHOOK_URL && { webhook: { ...config.webhook, url: process.env.WPP_WEBHOOK_URL } }),
 };
 
